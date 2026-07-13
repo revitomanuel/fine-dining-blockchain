@@ -1,0 +1,6 @@
+{
+  "name": "fine-dining-blockchain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Blockchain-based customer data storage for fine dining restaurants"
+}
