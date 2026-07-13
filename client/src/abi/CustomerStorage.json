@@ -1,0 +1,398 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "CustomerAlreadyExists",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "CustomerNotFound",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "InvalidCustomerData",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "fullName",
+          "type": "string"
+        }
+      ],
+      "name": "CustomerCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        }
+      ],
+      "name": "CustomerUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "transactionId",
+          "type": "uint256"
+        }
+      ],
+      "name": "TransactionAdded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "fullName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "phoneNumber",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "favoriteMenu",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "foodAllergies",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "specialNotes",
+          "type": "string"
+        }
+      ],
+      "name": "addCustomer",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "menuItems",
+          "type": "string"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalPrice",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "specialRequest",
+          "type": "string"
+        }
+      ],
+      "name": "addTransaction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        }
+      ],
+      "name": "customerExistsById",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getCustomer",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "customerId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "fullName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "phoneNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "favoriteMenu",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "foodAllergies",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "specialNotes",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "createdAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "updatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CustomerStorage.Customer",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getCustomerCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTransactionCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTransactionsByCustomer",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "transactionId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "menuItems",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalPrice",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "specialRequest",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transactionDate",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct CustomerStorage.Transaction[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "phoneNumber",
+          "type": "string"
+        }
+      ],
+      "name": "searchCustomerByPhone",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "customerId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "fullName",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "phoneNumber",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "favoriteMenu",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "foodAllergies",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "specialNotes",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "createdAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "updatedAt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "exists",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct CustomerStorage.Customer",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "customerId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "fullName",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "phoneNumber",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "favoriteMenu",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "foodAllergies",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "specialNotes",
+          "type": "string"
+        }
+      ],
+      "name": "updateCustomer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+}  
