@@ -2,20 +2,25 @@ import { ethers } from "ethers";
 import CustomerStorage from "../../abi/CustomerStorage.json";
 import { CONTRACT_CONFIG } from "../../config/contract";
 
-export async function getContract() {
-
+export async function getProvider() {
     if (!window.ethereum) {
-        throw new Error("MetaMask is not installed.");
+        throw new Error("MetaMask tidak ditemukan.");
     }
 
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    return new ethers.BrowserProvider(window.ethereum);
+}
 
-    const signer = await provider.getSigner();
+export async function getSigner() {
+    const provider = await getProvider();
+    return await provider.getSigner();
+}
+
+export async function getContract() {
+    const signer = await getSigner();
 
     return new ethers.Contract(
         CONTRACT_CONFIG.address,
         CustomerStorage.abi,
         signer
     );
-
 }

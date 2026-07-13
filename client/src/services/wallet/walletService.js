@@ -1,13 +1,20 @@
+import { getProvider } from "../blockchain/blockchainService";
+
 export async function connectWallet() {
 
     if (!window.ethereum) {
-        throw new Error("MetaMask not found.");
+        throw new Error("MetaMask belum terpasang.");
     }
 
-    const accounts = await window.ethereum.request({
+    await window.ethereum.request({
         method: "eth_requestAccounts"
     });
 
-    return accounts[0];
+    const provider = await getProvider();
 
+    const signer = await provider.getSigner();
+
+    return {
+        address: await signer.getAddress()
+    };
 }
