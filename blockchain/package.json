@@ -1,0 +1,32 @@
+{
+  "name": "blockchain",
+  "version": "1.0.0",
+  "description": "Fine Dining Blockchain Prototype",
+  "type": "module",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "clean": "npx hardhat clean",
+    "node": "npx hardhat node",
+    "deploy": "npx hardhat run scripts/deploy.js --network sepolia"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "hardhat",
+    "solidity",
+    "restaurant",
+    "fine-dining"
+  ],
+  "author": "Revito Manuel Hasudungan Manik",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-ethers": "^4.0.14",
+    "hardhat": "^3.9.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1",
+    "dotenv": "^17.4.2",
+    "ethers": "^6.17.0"
+  }
+}
