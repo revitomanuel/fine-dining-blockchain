@@ -1,28 +1,82 @@
-import React, { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { TransactionTable } from '../../components/transaction/TransactionTable';
 import { TransactionForm } from '../../components/transaction/TransactionForm';
 import { Card } from '../../components/ui/Card';
+import { useWallet } from '../../hooks/useWallet';
+import { getAllTransactions } from '../../services/transaction/transactionService';
+import { getCustomerCount } from '../../services/customer/customerService';
+import { ScrollText, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export const TransactionsPage = () => {
-  const [mockLogs] = useState([
-    { block: 119402, hash: "0x3f1a...48de", customerId: "VIP-PASS-001", action: "State Mutation", time: "2026-07-14 00:10" },
-    { block: 119385, hash: "0x892b...fa21", customerId: "VIP-PASS-002", action: "Contract Setup", time: "2026-07-13 23:45" }
-  ]);
+  const { contract, account } = useWallet();
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchTransactions = useCallback(async () => {
+    if (!contract) return;
+    try {
+      setLoading(true);
+      const custCount = await getCustomerCount(contract);
+      const data = await getAllTransactions(contract, custCount);
+      setTransactions(data);
+    } catch (err) {
+      console.error("Failed to fetch transactions:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [contract]);
+
+  useEffect(() => {
+    const loadTransactions = async () => {
+      await fetchTransactions();
+    };
+
+    loadTransactions();
+  }, [fetchTransactions]);
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-light tracking-wide text-zinc-100 uppercase">Audit Trail Records</h2>
-        <p className="text-zinc-500 text-xs mt-1">Cryptographically signed logs verifying immutable operations history.</p>
+    <div className="space-y-8 animate-fade-in">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="heading-xl flex items-center gap-2">
+            <ScrollText size={20} className="text-[var(--gold)]" />
+            Transaction Records
+          </h2>
+          <p className="text-caption mt-1">Riwayat transaksi yang tersimpan di blockchain.</p>
+        </div>
+        <button
+          onClick={fetchTransactions}
+          disabled={loading || !contract}
+          className="btn btn-secondary btn-sm"
+        >
+          <RefreshCw size={12} className={loading ? 'animate-spin' : ''} />
+          <span>Refresh</span>
+        </button>
       </div>
 
-      <Card>
-        <h3 className="text-xs uppercase tracking-widest text-zinc-400 font-medium mb-4">Append Real-time Operational Event</h3>
-        <TransactionForm />
+      <div className="divider-gold" style={{ margin: '16px 0' }} />
+
+      {!account && (
+        <div className="alert-warning">
+          <AlertTriangle size={16} />
+          <span>Hubungkan MetaMask untuk melihat dan menambah transaksi.</span>
+        </div>
+      )}
+
+      <Card className="max-w-2xl">
+        <h3 className="heading-md mb-4" style={{ color: 'var(--text-primary)' }}>Add New Transaction</h3>
+        <TransactionForm onTransactionAdded={fetchTransactions} />
       </Card>
 
-      <Card className="p-0">
-        <TransactionTable logs={mockLogs} />
+      <Card className="p-0 overflow-hidden">
+        {loading ? (
+          <div className="p-12 text-center text-xs text-zinc-500 flex flex-col items-center justify-center gap-2">
+            <RefreshCw size={24} className="animate-spin text-[var(--gold)]" />
+            <span>Loading transactions from blockchain...</span>
+          </div>
+        ) : (
+          <TransactionTable logs={transactions} />
+        )}
       </Card>
     </div>
   );

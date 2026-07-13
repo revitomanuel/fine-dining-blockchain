@@ -1,30 +1,47 @@
-import React from 'react';
+import { Inbox } from 'lucide-react';
 
 export const TransactionTable = ({ logs }) => {
+  const formatDate = (timestamp) => {
+    if (!timestamp) return '—';
+    return new Date(timestamp * 1000).toLocaleString('id-ID', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+  };
+
+  if (!logs || logs.length === 0) {
+    return (
+      <div className="empty-state">
+        <Inbox size={40} className="empty-state-icon" />
+        <p className="empty-state-text">
+          Belum ada data transaksi tercatat pada blockchain.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto w-full">
-      <table className="w-full text-left font-mono text-xs text-zinc-400">
-        <thead className="bg-zinc-900/40 text-zinc-500 border-b border-zinc-900 text-[10px] uppercase tracking-widest">
+      <table className="table-premium">
+        <thead>
           <tr>
-            <th className="p-4 font-normal">Block Number</th>
-            <th className="p-4 font-normal">Transaction Hash</th>
-            <th className="p-4 font-normal">Guest Pointer</th>
-            <th className="p-4 font-normal">Operation Status</th>
-            <th className="p-4 font-normal text-right">Timestamp</th>
+            <th>TX ID</th>
+            <th>Customer ID</th>
+            <th>Menu Items</th>
+            <th>Total Price</th>
+            <th>Special Request</th>
+            <th className="text-right">Date</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-900/40">
+        <tbody>
           {logs.map((item, index) => (
-            <tr key={index} className="hover:bg-zinc-900/20 transition-colors">
-              <td className="p-4 text-zinc-500">#{item.block}</td>
-              <td className="p-4 text-amber-500/80 hover:underline cursor-pointer">{item.hash}</td>
-              <td className="p-4 text-zinc-200 font-sans">{item.customerId}</td>
-              <td className="p-4">
-                <span className="px-2 py-0.5 rounded text-[9px] uppercase tracking-wider bg-zinc-900 text-amber-400 border border-amber-500/20">
-                  {item.action}
-                </span>
-              </td>
-              <td className="p-4 text-right text-zinc-500 font-sans">{item.time}</td>
+            <tr key={index}>
+              <td className="font-mono text-[var(--gold)]">#{item.transactionId}</td>
+              <td className="font-mono text-zinc-200">#{item.customerId}</td>
+              <td style={{ color: 'var(--text-primary)' }}>{item.menuItems}</td>
+              <td className="font-mono">{item.totalPrice.toLocaleString()} Wei</td>
+              <td className="italic">{item.specialRequest || '—'}</td>
+              <td className="text-right font-mono text-caption">{formatDate(item.transactionDate)}</td>
             </tr>
           ))}
         </tbody>

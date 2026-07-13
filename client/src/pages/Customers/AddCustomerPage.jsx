@@ -1,15 +1,19 @@
-import React from 'react';
 import { CustomerForm } from '../../components/customer/CustomerForm';
 import { Card } from '../../components/ui/Card';
+import { UserPlus } from 'lucide-react';
 
 export const AddCustomerPage = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-fade-in">
       <div>
-        <h2 className="text-2xl font-light tracking-wide text-zinc-100 uppercase">Register Premium Guest</h2>
-        <p className="text-zinc-500 text-xs mt-1">Populate cryptographic profile layers for instant fine-dining personalization.</p>
+        <h2 className="heading-xl flex items-center gap-2">
+          <UserPlus size={20} className="text-[var(--gold)]" />
+          Register Premium Guest
+        </h2>
+        <p className="text-caption mt-1">Populate cryptographic profile layers for instant fine-dining personalization.</p>
+        <div className="divider-gold" style={{ margin: '16px 0' }} />
       </div>
-      <Card>
+      <Card className="max-w-2xl">
         <CustomerForm />
       </Card>
     </div>

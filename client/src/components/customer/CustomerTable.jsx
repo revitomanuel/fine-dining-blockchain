@@ -1,29 +1,45 @@
-import React from 'react';
+import { ChevronRight, Inbox } from 'lucide-react';
 
 export const CustomerTable = ({ data, onSelectRow }) => {
+  if (!data || data.length === 0) {
+    return (
+      <div className="empty-state">
+        <Inbox size={40} className="empty-state-icon" />
+        <p className="empty-state-text">
+          Belum ada data customer. Tambahkan customer baru melalui menu Register VIP Patron.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="overflow-x-auto w-full">
-      <table className="w-full text-left text-xs text-zinc-400">
-        <thead className="text-[10px] uppercase bg-zinc-900/60 text-zinc-500 tracking-widest border-b border-zinc-900">
+      <table className="table-premium">
+        <thead>
           <tr>
-            <th className="p-4 font-normal">Vault ID</th>
-            <th className="p-4 font-normal">Patron Name</th>
-            <th className="p-4 font-normal">Ambiance</th>
-            <th className="p-4 font-normal text-right">Archival File</th>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Phone</th>
+            <th>Favorite Menu</th>
+            <th className="text-right">Action</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-zinc-900/50">
+        <tbody>
           {data.map((customer) => (
             <tr
-              key={customer.id}
+              key={customer.customerId}
               onClick={() => onSelectRow(customer)}
-              className="hover:bg-zinc-900/30 cursor-pointer transition-colors group"
+              className="cursor-pointer group"
             >
-              <td className="p-4 font-mono text-amber-500/80">{customer.id}</td>
-              <td className="p-4 font-medium text-zinc-200">{customer.name}</td>
-              <td className="p-4 text-zinc-400">{customer.seatingPreference}</td>
-              <td className="p-4 text-right text-zinc-500 group-hover:text-amber-400 transition-colors">
-                Decrypt Dossier →
+              <td className="font-mono" style={{ color: 'var(--gold)' }}>#{customer.customerId}</td>
+              <td className="font-medium" style={{ color: 'var(--text-primary)' }}>{customer.fullName}</td>
+              <td className="font-mono">{customer.phoneNumber}</td>
+              <td>{customer.favoriteMenu || '—'}</td>
+              <td className="text-right">
+                <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-wider font-semibold group-hover:text-[var(--gold)] transition-colors">
+                  View Detail
+                  <ChevronRight size={12} className="transform group-hover:translate-x-0.5 transition-transform" />
+                </span>
               </td>
             </tr>
           ))}

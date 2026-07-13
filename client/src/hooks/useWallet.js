@@ -1,5 +1,8 @@
-import { useWalletContext } from "../context/WalletContext";
+import { useContext } from "react";
+import { WalletContext } from "../context/WalletContext";
 
-export default function useWallet() {
-    return useWalletContext();
+export function useWallet() {
+    return useContext(WalletContext);
 }
+
+export default useWallet;

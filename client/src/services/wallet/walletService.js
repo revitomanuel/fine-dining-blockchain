@@ -1,4 +1,4 @@
-import { getProvider } from "../blockchain/blockchainService";
+import { ethers } from "ethers";
 
 export async function connectWallet() {
 
@@ -10,7 +10,7 @@ export async function connectWallet() {
         method: "eth_requestAccounts"
     });
 
-    const provider = await getProvider();
+    const provider = new ethers.BrowserProvider(window.ethereum);
 
     const signer = await provider.getSigner();
 

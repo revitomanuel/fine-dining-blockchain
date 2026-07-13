@@ -1,5 +1,5 @@
-import React from 'react';
 import { useWallet } from '../../hooks/useWallet';
+import { Wallet, Loader2 } from 'lucide-react';
 
 export const ConnectWallet = () => {
   const { account, connectWallet, loading } = useWallet();
@@ -8,21 +8,56 @@ export const ConnectWallet = () => {
     <button
       onClick={connectWallet}
       disabled={loading}
-      className={`px-4 py-2 text-xs uppercase tracking-widest font-medium transition-all duration-300 rounded border ${
-        account
-          ? 'bg-zinc-900 text-amber-400 border-amber-500/20 hover:border-amber-500/40'
-          : 'bg-amber-600 hover:bg-amber-500 text-zinc-950 border-transparent font-semibold shadow-[0_0_15px_rgba(217,119,6,0.15)] hover:shadow-[0_0_20px_rgba(217,119,6,0.3)]'
-      }`}
+      className="flex items-center gap-2 px-4 py-2.5 text-xs uppercase tracking-[0.12em] font-semibold rounded-lg"
+      style={{
+        transition: 'all var(--transition-base)',
+        background: account
+          ? 'var(--bg-elevated)'
+          : 'linear-gradient(135deg, var(--gold), #C4A030)',
+        color: account ? 'var(--gold)' : '#0A0A0A',
+        border: account
+          ? '1px solid var(--gold-border)'
+          : '1px solid transparent',
+        boxShadow: account
+          ? 'none'
+          : '0 2px 15px rgba(212,175,55,0.2)',
+      }}
+      onMouseEnter={(e) => {
+        if (account) {
+          e.currentTarget.style.borderColor = 'var(--gold)';
+          e.currentTarget.style.boxShadow = '0 0 15px var(--gold-glow)';
+        } else {
+          e.currentTarget.style.boxShadow = '0 4px 25px rgba(212,175,55,0.3)';
+          e.currentTarget.style.transform = 'translateY(-1px)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (account) {
+          e.currentTarget.style.borderColor = 'var(--gold-border)';
+          e.currentTarget.style.boxShadow = 'none';
+        } else {
+          e.currentTarget.style.boxShadow = '0 2px 15px rgba(212,175,55,0.2)';
+          e.currentTarget.style.transform = 'translateY(0)';
+        }
+      }}
     >
       {loading ? (
-        <span className="flex items-center gap-2">
-          <span className="animate-spin h-3 w-3 border-2 border-zinc-950 border-t-transparent rounded-full" />
-          Securing...
-        </span>
+        <>
+          <Loader2 size={14} className="animate-spin" />
+          <span>Securing...</span>
+        </>
       ) : account ? (
-        `${account.substring(0, 6)}...${account.substring(38)}`
+        <>
+          <Wallet size={14} />
+          <span style={{ fontFamily: 'monospace' }}>
+            {account.substring(0, 6)}...{account.substring(38)}
+          </span>
+        </>
       ) : (
-        'Access Console'
+        <>
+          <Wallet size={14} />
+          <span>Connect Wallet</span>
+        </>
       )}
     </button>
   );

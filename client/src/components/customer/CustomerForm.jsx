@@ -1,40 +1,38 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useWallet } from '../../hooks/useWallet';
+import { addCustomer } from '../../services/customer/customerService';
+import { User, Phone, Utensils, ShieldAlert, StickyNote, Loader2 } from 'lucide-react';
 
 export const CustomerForm = () => {
-  const { customerContract, account } = useWallet();
+  const { contract, account } = useWallet();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
-    name: '',
-    allergies: '',
-    seatingPreference: 'Chef\'s Table',
-    winePreference: ''
+    fullName: '',
+    phoneNumber: '',
+    favoriteMenu: '',
+    foodAllergies: '',
+    specialNotes: ''
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!account || !customerContract) {
-      alert("Please authenticate your cryptographic identity wallet via MetaMask.");
+    if (!account || !contract) {
+      alert("Silakan hubungkan MetaMask terlebih dahulu.");
       return;
     }
 
     try {
       setSubmitting(true);
-      // Panggilan ethers v6 write operation ke blockchain ledger
-      const tx = await customerContract.addCustomer(
-        formData.id,
-        formData.name,
-        formData.allergies,
-        formData.seatingPreference,
-        formData.winePreference
-      );
-      await tx.wait();
-      alert("Guest preferences successfully signed & written to block ledger.");
-      setFormData({ id: '', name: '', allergies: '', seatingPreference: 'Chef\'s Table', winePreference: '' });
+      await addCustomer(contract, formData);
+      alert("Customer berhasil ditambahkan ke blockchain!");
+      setFormData({ fullName: '', phoneNumber: '', favoriteMenu: '', foodAllergies: '', specialNotes: '' });
     } catch (err) {
       console.error(err);
-      alert("Blockchain execution transaction error.");
+      if (err.reason) {
+        alert(`Error: ${err.reason}`);
+      } else {
+        alert("Gagal menambahkan customer. Cek console untuk detail.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -42,73 +40,95 @@ export const CustomerForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-xl">
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-2 font-medium">Guest Identifier (Cryptographic Key / ID)</label>
-        <input
-          type="text"
-          required
-          value={formData.id}
-          onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-          className="w-full bg-zinc-900/50 border border-zinc-800 focus:border-amber-500/40 rounded p-3 text-xs text-zinc-100 font-mono outline-none transition-all"
-          placeholder="e.g., VIP-PASSPORT-009"
-        />
-      </div>
-
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-2 font-medium">Full Name (Legal Profile)</label>
-        <input
-          type="text"
-          required
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="w-full bg-zinc-900/50 border border-zinc-800 focus:border-amber-500/40 rounded p-3 text-xs text-zinc-100 outline-none transition-all"
-          placeholder="e.g., Countess Vivienne Beauchamp"
-        />
-      </div>
-
-      <div>
-        <label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-2 font-medium">Critical Medical Allergies</label>
-        <input
-          type="text"
-          value={formData.allergies}
-          onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
-          className="w-full bg-zinc-900/50 border border-zinc-800 focus:border-amber-500/40 rounded p-3 text-xs text-zinc-100 outline-none transition-all"
-          placeholder="e.g., Organic Truffles, Strict Seafood Anaphylaxis"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-2 font-medium">Table Layout Architecture</label>
-          <select
-            value={formData.seatingPreference}
-            onChange={(e) => setFormData({ ...formData, seatingPreference: e.target.value })}
-            className="w-full bg-zinc-900/50 border border-zinc-800 focus:border-amber-500/40 rounded p-3 text-xs text-zinc-100 outline-none transition-all appearance-none"
-          >
-            <option value="Chef's Table">Chef's Table (Front Row)</option>
-            <option value="Private Salon Noir">Private Salon Noir</option>
-            <option value="Grand Window View">Grand Window View</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-[10px] uppercase tracking-widest text-zinc-400 mb-2 font-medium">Grand Cru Sommelier Allocation</label>
+      <div className="input-group">
+        <label className="input-label">Full Name</label>
+        <div className="relative">
+          <User className="input-icon" size={16} />
           <input
             type="text"
-            value={formData.winePreference}
-            onChange={(e) => setFormData({ ...formData, winePreference: e.target.value })}
-            className="w-full bg-zinc-900/50 border border-zinc-800 focus:border-amber-500/40 rounded p-3 text-xs text-zinc-100 outline-none transition-all"
-            placeholder="e.g., Romanée-Conti 1999"
+            required
+            value={formData.fullName}
+            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            className="input-premium input-with-icon"
+            placeholder="e.g., Lord Johnathan Doe"
           />
+        </div>
+      </div>
+
+      <div className="input-group">
+        <label className="input-label">Phone Number</label>
+        <div className="relative">
+          <Phone className="input-icon" size={16} />
+          <input
+            type="text"
+            required
+            value={formData.phoneNumber}
+            onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+            className="input-premium input-with-icon input-mono"
+            placeholder="e.g., +62812345678"
+          />
+        </div>
+      </div>
+
+      <div className="input-group">
+        <label className="input-label">Favorite Menu</label>
+        <div className="relative">
+          <Utensils className="input-icon" size={16} />
+          <input
+            type="text"
+            value={formData.favoriteMenu}
+            onChange={(e) => setFormData({ ...formData, favoriteMenu: e.target.value })}
+            className="input-premium input-with-icon"
+            placeholder="e.g., Caviar Ossetra, Wagyu A5 Ribeye"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="input-group">
+          <label className="input-label">Food Allergies</label>
+          <div className="relative">
+            <ShieldAlert className="input-icon" size={16} />
+            <input
+              type="text"
+              value={formData.foodAllergies}
+              onChange={(e) => setFormData({ ...formData, foodAllergies: e.target.value })}
+              className="input-premium input-with-icon"
+              placeholder="e.g., Gluten, Peanuts"
+            />
+          </div>
+        </div>
+
+        <div className="input-group">
+          <label className="input-label">Special Notes</label>
+          <div className="relative">
+            <StickyNote className="input-icon" size={16} />
+            <input
+              type="text"
+              value={formData.specialNotes}
+              onChange={(e) => setFormData({ ...formData, specialNotes: e.target.value })}
+              className="input-premium input-with-icon"
+              placeholder="e.g., Table 4 facing pool, VIP guest"
+            />
+          </div>
         </div>
       </div>
 
       <button
         type="submit"
-        disabled={submitting}
-        className="w-full py-3.5 bg-amber-600 hover:bg-amber-500 disabled:bg-zinc-900 disabled:text-zinc-600 text-zinc-950 text-xs font-semibold uppercase tracking-widest transition-all rounded shadow-md"
+        disabled={submitting || !account}
+        className="w-full btn btn-primary py-4 text-xs tracking-[0.2em]"
       >
-        {submitting ? 'Broadcasting Immutable Block...' : 'Commit Dossier to Blockchain'}
+        {submitting ? (
+          <>
+            <Loader2 className="animate-spin mr-2" size={16} />
+            Broadcasting to Blockchain...
+          </>
+        ) : !account ? (
+          'Connect Wallet First'
+        ) : (
+          'Add Customer to Blockchain'
+        )}
       </button>
     </form>
   );
